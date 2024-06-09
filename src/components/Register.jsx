@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import {
   Form,
   FormGroup,
@@ -6,8 +7,9 @@ import {
   Input,
   Label,
   FormFeedback,
+  Card,
+  CardFooter,
 } from "reactstrap";
-import axios from "axios";
 
 export default function Register() {
   const errorMessages = {
@@ -23,7 +25,7 @@ export default function Register() {
   };
 
   const errorInfo = {
-    name: false,
+    email: false,
     password: false,
     terms: false,
   };
@@ -31,6 +33,7 @@ export default function Register() {
   const [form, setForm] = useState(initialForm);
   const [isValid, setIsValid] = useState(false);
   const [formErrors, setFormErrors] = useState(errorInfo);
+  const [id, setId] = useState("");
 
   function validateEmail(email) {
     const emailRegex =
@@ -58,7 +61,11 @@ export default function Register() {
   }
 
   useEffect(() => {
-    if (validateEmail(form.email) && validatePassword(form.password) && terms) {
+    if (
+      validateEmail(form.email) &&
+      validatePassword(form.password) &&
+      form.terms
+    ) {
       setIsValid(true);
     } else {
       setIsValid(false);
@@ -88,46 +95,67 @@ export default function Register() {
 
   function handleSubmit(event) {
     event.preventDefault();
+    if (!isValid) return;
+    axios
+      .post("https://reqres.in/api/users", form)
+      .then((res) => {
+        setId(res.data.id);
+        setForm(initialForm);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 
   return (
     <Form>
-      <FormGroup>
-        <Label for="email">Email</Label>
-        <Input
-          id="email"
-          name="email"
-          placeholder="Enter your email"
-          type="email"
-          value={form.email}
-          onChange={handleChange}
-          invalid={errorInfo.email}
-        />
-        {errorInfo.email && <FormFeedback>{errorMessages.email}</FormFeedback>}
-      </FormGroup>
-      <FormGroup>
-        <Label for="password">Password</Label>
-        <Input
-          id="password"
-          name="password"
-          placeholder="Enter your password"
-          type="password"
-          onChange={handleChange}
-          value={form.password}
-        />
-      </FormGroup>
-      <FormGroup check>
-        <Input
-          id="terms"
-          name="terms"
-          type="checkbox"
-          onChange={handleChange}
-        />{" "}
-        <Label check>Agree to the terms and conditions</Label>
-      </FormGroup>
-      <Button color="primary" onClick={handleSubmit} disabled={!isValid}>
-        Login
-      </Button>
+      <Card>
+        <FormGroup>
+          <Label for="email">Email</Label>
+          <Input
+            id="email"
+            name="email"
+            placeholder="Enter your email"
+            type="email"
+            value={form.email}
+            onChange={handleChange}
+            invalid={formErrors.email}
+          />
+          {formErrors.email && (
+            <FormFeedback>{errorMessages.email}</FormFeedback>
+          )}
+        </FormGroup>
+        <FormGroup>
+          <Label for="password">Password</Label>
+          <Input
+            id="password"
+            name="password"
+            placeholder="Enter your password"
+            type="password"
+            onChange={handleChange}
+            value={form.password}
+            invalid={formErrors.password}
+          />
+          {formErrors.password && (
+            <FormFeedback>{errorMessages.password}</FormFeedback>
+          )}
+        </FormGroup>
+        <FormGroup check>
+          <Input
+            id="terms"
+            name="terms"
+            type="checkbox"
+            onChange={handleChange}
+            checked={form.terms}
+          />{" "}
+          <Label check>Agree to the terms and conditions</Label>
+        </FormGroup>
+        <Button color="primary" onClick={handleSubmit} disabled={!isValid}>
+          Login
+        </Button>
+
+        <CardFooter>ID: {id}</CardFooter>
+      </Card>
     </Form>
   );
 }
