@@ -120,9 +120,12 @@ export default function Register() {
             value={form.email}
             onChange={handleChange}
             invalid={formErrors.email}
+            data-cy="email-input"
           />
           {formErrors.email && (
-            <FormFeedback>{errorMessages.email}</FormFeedback>
+            <FormFeedback data-cy="error-message">
+              {errorMessages.email}
+            </FormFeedback>
           )}
         </FormGroup>
         <FormGroup>
@@ -135,9 +138,12 @@ export default function Register() {
             onChange={handleChange}
             value={form.password}
             invalid={formErrors.password}
+            data-cy="password-input"
           />
           {formErrors.password && (
-            <FormFeedback>{errorMessages.password}</FormFeedback>
+            <FormFeedback data-cy="error-message">
+              {errorMessages.password}
+            </FormFeedback>
           )}
         </FormGroup>
         <FormGroup check>
@@ -147,6 +153,7 @@ export default function Register() {
             type="checkbox"
             onChange={handleChange}
             checked={form.terms}
+            data-cy="terms-input"
           />{" "}
           <Label check>Agree to the terms and conditions</Label>
         </FormGroup>
