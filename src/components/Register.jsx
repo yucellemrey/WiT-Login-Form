@@ -157,11 +157,16 @@ export default function Register() {
           />{" "}
           <Label check>Agree to the terms and conditions</Label>
         </FormGroup>
-        <Button color="primary" onClick={handleSubmit} disabled={!isValid}>
+        <Button
+          color="primary"
+          onClick={handleSubmit}
+          disabled={!isValid}
+          data-cy="submit-button"
+        >
           Login
         </Button>
 
-        <CardFooter>ID: {id}</CardFooter>
+        {id && <CardFooter data-cy="id-input">ID: {id}</CardFooter>}
       </Card>
     </Form>
   );

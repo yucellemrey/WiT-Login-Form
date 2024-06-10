@@ -17,4 +17,25 @@ describe("Register Page", () => {
       cy.contains("Please enter a valid password");
     });
   });
+  describe("Button Disabled", () => {
+    it("Button is disabled when inputs are invalid", () => {
+      // Arrange
+      cy.visit("http://localhost:5173/");
+      // Act
+      cy.get(`[data-cy="password-input"]`).type("1234");
+      cy.get(`[data-cy="submit-button"]`).should("be.disabled");
+    });
+  });
+  describe("Form Inputs Validated", () => {
+    it("Button is enabled when inputs are valid", () => {
+      // Arrange
+      cy.visit("http://localhost:5173/");
+      // Act
+      cy.get(`[data-cy="email-input"]`).type("emreyucel97@outlook.com");
+      cy.get(`[data-cy="password-input"]`).type("Merdiven00!");
+      cy.get(`[data-cy="terms-input"]`).click();
+      cy.get(`[data-cy="submit-button"]`).should("be.enabled").click();
+      cy.get(`[data-cy="id-input"]`).should("be.visible");
+    });
+  });
 });
